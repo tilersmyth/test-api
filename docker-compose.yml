@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  ncp_server:
+    container_name: ncp_server
+    build: .
+    ports:
+      - 5000:5000
