@@ -213,9 +213,9 @@ export class Ecstack extends cdk.Stack {
           taskImageOptions: {
             containerName: this.repoName,
             image: ecs.ContainerImage.fromRegistry(
-              'tilersmyth/ecs-placeholder:latest',
+              'tilersmyth/ecs-placeholder-v2:latest',
             ),
-            containerPort: 3000,
+            containerPort: 5000,
           },
         },
       );
