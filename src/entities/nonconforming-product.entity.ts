@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+
 import { NonConformingProductGroupEntity } from './nonconforming-product-group.entity';
 
 export enum NonconformingProductGroupEnum {

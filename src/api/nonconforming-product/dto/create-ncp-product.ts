@@ -1,4 +1,4 @@
-import { NonconformingProductGroupEnum } from '../../entities/nonconforming-product.entity';
+import { NonconformingProductGroupEnum } from '../../../entities/nonconforming-product.entity';
 
 export class CreateNonconformingProductDto {
   id: number;

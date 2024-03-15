@@ -1,9 +1,9 @@
 import * as cdk from 'aws-cdk-lib';
 
-import { getStageName } from '../utils/get-stage-name';
-import { capitalize } from '../utils/capitalize';
-import { StageContext } from '../types/stage-context';
 import { Ecstack } from '../lib/ecs-stack';
+import { StageContext } from '../types/stage-context';
+import { capitalize } from '../utils/capitalize';
+import { getStageName } from '../utils/get-stage-name';
 
 const app = new cdk.App();
 

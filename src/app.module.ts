@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
-import { NonconformingProductModule } from './nonconforming-product/nonconforming-product.module';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { ApiModule } from './api/api.module';
 import { TypeormService } from './typeorm/typeorm.service';
 
 @Module({
@@ -11,8 +11,7 @@ import { TypeormService } from './typeorm/typeorm.service';
       useClass: TypeormService,
       imports: [ConfigModule.forRoot()],
     }),
-    UserModule,
-    NonconformingProductModule,
+    ApiModule,
   ],
 })
 export class AppModule {}

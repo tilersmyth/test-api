@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { NonconformingProductService } from './nonconforming-product.service';
+
 import { CreateNonconformingProductDto } from './dto/create-ncp-product';
+import { NonconformingProductService } from './nonconforming-product.service';
 
 @Controller('nonconforming_products')
 export class NonconformingProductController {

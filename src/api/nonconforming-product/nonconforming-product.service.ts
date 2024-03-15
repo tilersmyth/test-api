@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { NonConformingProductGroupEntity } from '../../entities/nonconforming-product-group.entity';
 import {
   NonConformingProductEntity,
   NonconformingProductGroupEnum,
-} from '../entities/nonconforming-product.entity';
+} from '../../entities/nonconforming-product.entity';
+
 import { CreateNonconformingProductDto } from './dto/create-ncp-product';
-import { NonConformingProductGroupEntity } from '../entities/nonconforming-product-group.entity';
 
 @Injectable()
 export class NonconformingProductService {
