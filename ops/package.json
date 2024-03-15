@@ -1,0 +1,22 @@
+{
+  "name": "ops",
+  "version": "1.0.0",
+  "bin": {
+    "app": "bin/app.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk",
+    "deploy_prod": "cdk deploy --profile=walden-prod --all --context stage=prod",
+    "deploy_staging": "cdk deploy --profile=walden-staging --all --context stage=staging"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.133.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  }
+}

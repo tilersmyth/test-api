@@ -1,0 +1,2324 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "VpsEcsStackStaging": {
+        "id": "VpsEcsStackStaging",
+        "path": "VpsEcsStackStaging",
+        "children": {
+          "VpsHostedZone": {
+            "id": "VpsHostedZone",
+            "path": "VpsEcsStackStaging/VpsHostedZone",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.133.0"
+            }
+          },
+          "AcmHostedCertificate": {
+            "id": "AcmHostedCertificate",
+            "path": "VpsEcsStackStaging/AcmHostedCertificate",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "VpsEcsStackStaging/AcmHostedCertificate/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CertificateManager::Certificate",
+                  "aws:cdk:cloudformation:props": {
+                    "domainName": "vps.waldenlocaltesting.com",
+                    "domainValidationOptions": [
+                      {
+                        "domainName": "vps.waldenlocaltesting.com",
+                        "hostedZoneId": "Z07469572CN5VXN0JKWRR"
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "Name",
+                        "value": "VpsEcsStackStaging/AcmHostedCertificate"
+                      }
+                    ],
+                    "validationMethod": "DNS"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_certificatemanager.CfnCertificate",
+                  "version": "2.133.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_certificatemanager.Certificate",
+              "version": "2.133.0"
+            }
+          },
+          "VpsEcrRepository": {
+            "id": "VpsEcrRepository",
+            "path": "VpsEcsStackStaging/VpsEcrRepository",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "VpsEcsStackStaging/VpsEcrRepository/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECR::Repository",
+                  "aws:cdk:cloudformation:props": {
+                    "repositoryName": "staging-vps-ecr-repo"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecr.CfnRepository",
+                  "version": "2.133.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecr.Repository",
+              "version": "2.133.0"
+            }
+          },
+          "vps-codepipeline": {
+            "id": "vps-codepipeline",
+            "path": "VpsEcsStackStaging/vps-codepipeline",
+            "children": {
+              "Role": {
+                "id": "Role",
+                "path": "VpsEcsStackStaging/vps-codepipeline/Role",
+                "children": {
+                  "ImportRole": {
+                    "id": "ImportRole",
+                    "path": "VpsEcsStackStaging/vps-codepipeline/Role/ImportRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VpsEcsStackStaging/vps-codepipeline/Role/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "codebuild.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "VpsEcsStackStaging/vps-codepipeline/Role/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/vps-codepipeline/Role/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:aws:logs:us-east-1:781713655045:log-group:/aws/codebuild/",
+                                          {
+                                            "Ref": "vpscodepipeline3AA9DA99"
+                                          },
+                                          ":*"
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:aws:logs:us-east-1:781713655045:log-group:/aws/codebuild/",
+                                          {
+                                            "Ref": "vpscodepipeline3AA9DA99"
+                                          }
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "codebuild:BatchPutCodeCoverages",
+                                    "codebuild:BatchPutTestCases",
+                                    "codebuild:CreateReport",
+                                    "codebuild:CreateReportGroup",
+                                    "codebuild:UpdateReport"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:aws:codebuild:us-east-1:781713655045:report-group/",
+                                        {
+                                          "Ref": "vpscodepipeline3AA9DA99"
+                                        },
+                                        "-*"
+                                      ]
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Action": [
+                                    "s3:Abort*",
+                                    "s3:DeleteObject*",
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*",
+                                    "s3:PutObject",
+                                    "s3:PutObjectLegalHold",
+                                    "s3:PutObjectRetention",
+                                    "s3:PutObjectTagging",
+                                    "s3:PutObjectVersionTagging"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "VpsPipelineArtifactsBucketBA4B0869",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "VpsPipelineArtifactsBucketBA4B0869",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "kms:Decrypt",
+                                    "kms:DescribeKey",
+                                    "kms:Encrypt",
+                                    "kms:GenerateDataKey*",
+                                    "kms:ReEncrypt*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "VpsPipelineArtifactsBucketEncryptionKeyC5348ED9",
+                                      "Arn"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "vpscodepipelineRoleDefaultPolicy3DC1B7C4",
+                            "roles": [
+                              {
+                                "Ref": "vpscodepipelineRoleB0734E91"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.133.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "VpsEcsStackStaging/vps-codepipeline/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CodeBuild::Project",
+                  "aws:cdk:cloudformation:props": {
+                    "artifacts": {
+                      "type": "CODEPIPELINE"
+                    },
+                    "cache": {
+                      "type": "LOCAL",
+                      "modes": [
+                        "LOCAL_CUSTOM_CACHE"
+                      ]
+                    },
+                    "encryptionKey": {
+                      "Fn::GetAtt": [
+                        "VpsPipelineArtifactsBucketEncryptionKeyC5348ED9",
+                        "Arn"
+                      ]
+                    },
+                    "environment": {
+                      "type": "LINUX_CONTAINER",
+                      "image": "aws/codebuild/standard:5.0",
+                      "imagePullCredentialsType": "CODEBUILD",
+                      "privilegedMode": true,
+                      "computeType": "BUILD_GENERAL1_SMALL",
+                      "environmentVariables": [
+                        {
+                          "name": "ECR_REPO",
+                          "type": "PLAINTEXT",
+                          "value": {
+                            "Fn::Join": [
+                              "",
+                              [
+                                {
+                                  "Fn::Select": [
+                                    4,
+                                    {
+                                      "Fn::Split": [
+                                        ":",
+                                        {
+                                          "Fn::GetAtt": [
+                                            "VpsEcrRepository8A7AD2D3",
+                                            "Arn"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                ".dkr.ecr.",
+                                {
+                                  "Fn::Select": [
+                                    3,
+                                    {
+                                      "Fn::Split": [
+                                        ":",
+                                        {
+                                          "Fn::GetAtt": [
+                                            "VpsEcrRepository8A7AD2D3",
+                                            "Arn"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                ".",
+                                {
+                                  "Ref": "AWS::URLSuffix"
+                                },
+                                "/",
+                                {
+                                  "Ref": "VpsEcrRepository8A7AD2D3"
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "name": "vps-codepipeline",
+                    "serviceRole": {
+                      "Fn::GetAtt": [
+                        "vpscodepipelineRoleB0734E91",
+                        "Arn"
+                      ]
+                    },
+                    "source": {
+                      "type": "CODEPIPELINE",
+                      "buildSpec": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"build\": {\n      \"commands\": [\n        \"echo creating imagedefinitions.json dynamically\",\n        \"printf '[{\\\"name\\\":\\\"staging\\\",\\\"imageUri\\\": \\\"",
+                            {
+                              "Fn::Select": [
+                                4,
+                                {
+                                  "Fn::Split": [
+                                    ":",
+                                    {
+                                      "Fn::GetAtt": [
+                                        "VpsEcrRepository8A7AD2D3",
+                                        "Arn"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            ".dkr.ecr.",
+                            {
+                              "Fn::Select": [
+                                3,
+                                {
+                                  "Fn::Split": [
+                                    ":",
+                                    {
+                                      "Fn::GetAtt": [
+                                        "VpsEcrRepository8A7AD2D3",
+                                        "Arn"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            ".",
+                            {
+                              "Ref": "AWS::URLSuffix"
+                            },
+                            "/",
+                            {
+                              "Ref": "VpsEcrRepository8A7AD2D3"
+                            },
+                            ":latest\\\"}]' > imagedefinitions.json\",\n        \"echo Build completed on `date`\"\n      ]\n    }\n  },\n  \"artifacts\": {\n    \"files\": [\n      \"imagedefinitions.json\"\n    ]\n  }\n}"
+                          ]
+                        ]
+                      }
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codebuild.CfnProject",
+                  "version": "2.133.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_codebuild.PipelineProject",
+              "version": "2.133.0"
+            }
+          },
+          "VpsVpc": {
+            "id": "VpsVpc",
+            "path": "VpsEcsStackStaging/VpsVpc",
+            "children": {
+              "PublicSubnet1": {
+                "id": "PublicSubnet1",
+                "path": "VpsEcsStackStaging/VpsVpc/PublicSubnet1",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.133.0"
+                }
+              },
+              "PublicSubnet2": {
+                "id": "PublicSubnet2",
+                "path": "VpsEcsStackStaging/VpsVpc/PublicSubnet2",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.133.0"
+                }
+              },
+              "PrivateSubnet1": {
+                "id": "PrivateSubnet1",
+                "path": "VpsEcsStackStaging/VpsVpc/PrivateSubnet1",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.133.0"
+                }
+              },
+              "PrivateSubnet2": {
+                "id": "PrivateSubnet2",
+                "path": "VpsEcsStackStaging/VpsVpc/PrivateSubnet2",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.133.0"
+                }
+              },
+              "IsolatedSubnet1": {
+                "id": "IsolatedSubnet1",
+                "path": "VpsEcsStackStaging/VpsVpc/IsolatedSubnet1",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.133.0"
+                }
+              },
+              "IsolatedSubnet2": {
+                "id": "IsolatedSubnet2",
+                "path": "VpsEcsStackStaging/VpsVpc/IsolatedSubnet2",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.133.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.133.0"
+            }
+          },
+          "VpsFargateService": {
+            "id": "VpsFargateService",
+            "path": "VpsEcsStackStaging/VpsFargateService",
+            "children": {
+              "LB": {
+                "id": "LB",
+                "path": "VpsEcsStackStaging/VpsFargateService/LB",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VpsEcsStackStaging/VpsFargateService/LB/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+                      "aws:cdk:cloudformation:props": {
+                        "loadBalancerAttributes": [
+                          {
+                            "key": "deletion_protection.enabled",
+                            "value": "false"
+                          }
+                        ],
+                        "scheme": "internet-facing",
+                        "securityGroups": [
+                          {
+                            "Fn::GetAtt": [
+                              "VpsFargateServiceLBSecurityGroupD5DF0A57",
+                              "GroupId"
+                            ]
+                          }
+                        ],
+                        "subnets": [
+                          "subnet-0e4d0bb376f31544e",
+                          "subnet-0b42154679db19569"
+                        ],
+                        "type": "application"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "SecurityGroup": {
+                    "id": "SecurityGroup",
+                    "path": "VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "groupDescription": "Automatically created Security Group for ELB VpsEcsStackStagingVpsFargateServiceLBF2F29709",
+                            "securityGroupIngress": [
+                              {
+                                "cidrIp": "0.0.0.0/0",
+                                "ipProtocol": "tcp",
+                                "fromPort": 443,
+                                "toPort": 443,
+                                "description": "Allow from anyone on port 443"
+                              },
+                              {
+                                "cidrIp": "0.0.0.0/0",
+                                "ipProtocol": "tcp",
+                                "fromPort": 80,
+                                "toPort": 80,
+                                "description": "Allow from anyone on port 80"
+                              }
+                            ],
+                            "vpcId": "vpc-0c1fd07003dc37722"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                          "version": "2.133.0"
+                        }
+                      },
+                      "to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:3000": {
+                        "id": "to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:3000",
+                        "path": "VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:3000",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupEgress",
+                          "aws:cdk:cloudformation:props": {
+                            "description": "Load balancer to target",
+                            "destinationSecurityGroupId": {
+                              "Fn::GetAtt": [
+                                "VpsFargateServiceSecurityGroupA510111C",
+                                "GroupId"
+                              ]
+                            },
+                            "fromPort": 3000,
+                            "groupId": {
+                              "Fn::GetAtt": [
+                                "VpsFargateServiceLBSecurityGroupD5DF0A57",
+                                "GroupId"
+                              ]
+                            },
+                            "ipProtocol": "tcp",
+                            "toPort": 3000
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupEgress",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "PublicListener": {
+                    "id": "PublicListener",
+                    "path": "VpsEcsStackStaging/VpsFargateService/LB/PublicListener",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/VpsFargateService/LB/PublicListener/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                          "aws:cdk:cloudformation:props": {
+                            "certificates": [
+                              {
+                                "certificateArn": {
+                                  "Ref": "AcmHostedCertificateA5AF1191"
+                                }
+                              }
+                            ],
+                            "defaultActions": [
+                              {
+                                "type": "forward",
+                                "targetGroupArn": {
+                                  "Ref": "VpsFargateServiceLBPublicListenerECSGroup4CDFD554"
+                                }
+                              }
+                            ],
+                            "loadBalancerArn": {
+                              "Ref": "VpsFargateServiceLBAF5725FA"
+                            },
+                            "port": 443,
+                            "protocol": "HTTPS"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                          "version": "2.133.0"
+                        }
+                      },
+                      "ECSGroup": {
+                        "id": "ECSGroup",
+                        "path": "VpsEcsStackStaging/VpsFargateService/LB/PublicListener/ECSGroup",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "VpsEcsStackStaging/VpsFargateService/LB/PublicListener/ECSGroup/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+                              "aws:cdk:cloudformation:props": {
+                                "healthCheckIntervalSeconds": 45,
+                                "healthCheckPath": "/api/health",
+                                "healthCheckTimeoutSeconds": 30,
+                                "healthyThresholdCount": 2,
+                                "matcher": {
+                                  "httpCode": "200-299"
+                                },
+                                "port": 80,
+                                "protocol": "HTTP",
+                                "targetGroupAttributes": [
+                                  {
+                                    "key": "stickiness.enabled",
+                                    "value": "false"
+                                  },
+                                  {
+                                    "key": "deregistration_delay.timeout_seconds",
+                                    "value": "60"
+                                  },
+                                  {
+                                    "key": "slow_start.duration_seconds",
+                                    "value": "30"
+                                  }
+                                ],
+                                "targetType": "ip",
+                                "unhealthyThresholdCount": 5,
+                                "vpcId": "vpc-0c1fd07003dc37722"
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
+                              "version": "2.133.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationTargetGroup",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "PublicRedirectListener": {
+                    "id": "PublicRedirectListener",
+                    "path": "VpsEcsStackStaging/VpsFargateService/LB/PublicRedirectListener",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/VpsFargateService/LB/PublicRedirectListener/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                          "aws:cdk:cloudformation:props": {
+                            "defaultActions": [
+                              {
+                                "type": "redirect",
+                                "redirectConfig": {
+                                  "statusCode": "HTTP_301",
+                                  "port": "443",
+                                  "protocol": "HTTPS"
+                                }
+                              }
+                            ],
+                            "loadBalancerArn": {
+                              "Ref": "VpsFargateServiceLBAF5725FA"
+                            },
+                            "port": 80,
+                            "protocol": "HTTP"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer",
+                  "version": "2.133.0"
+                }
+              },
+              "LoadBalancerDNS": {
+                "id": "LoadBalancerDNS",
+                "path": "VpsEcsStackStaging/VpsFargateService/LoadBalancerDNS",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.133.0"
+                }
+              },
+              "ServiceURL": {
+                "id": "ServiceURL",
+                "path": "VpsEcsStackStaging/VpsFargateService/ServiceURL",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.133.0"
+                }
+              },
+              "TaskDef": {
+                "id": "TaskDef",
+                "path": "VpsEcsStackStaging/VpsFargateService/TaskDef",
+                "children": {
+                  "TaskRole": {
+                    "id": "TaskRole",
+                    "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/TaskRole",
+                    "children": {
+                      "ImportTaskRole": {
+                        "id": "ImportTaskRole",
+                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/TaskRole/ImportTaskRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.133.0"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/TaskRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "ecs-tasks.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                      "aws:cdk:cloudformation:props": {
+                        "containerDefinitions": [
+                          {
+                            "essential": true,
+                            "image": "tilersmyth/ecs-placeholder:latest",
+                            "name": "staging",
+                            "portMappings": [
+                              {
+                                "containerPort": 3000,
+                                "protocol": "tcp"
+                              }
+                            ],
+                            "logConfiguration": {
+                              "logDriver": "awslogs",
+                              "options": {
+                                "awslogs-group": {
+                                  "Ref": "VpsFargateServiceTaskDefstagingLogGroup9489A9E9"
+                                },
+                                "awslogs-stream-prefix": "VpsFargateService",
+                                "awslogs-region": "us-east-1"
+                              }
+                            }
+                          }
+                        ],
+                        "cpu": "256",
+                        "executionRoleArn": {
+                          "Fn::GetAtt": [
+                            "VpsFargateServiceTaskDefExecutionRole7A58406D",
+                            "Arn"
+                          ]
+                        },
+                        "family": "VpsEcsStackStagingVpsFargateServiceTaskDefA51A2388",
+                        "memory": "512",
+                        "networkMode": "awsvpc",
+                        "requiresCompatibilities": [
+                          "FARGATE"
+                        ],
+                        "taskRoleArn": {
+                          "Fn::GetAtt": [
+                            "VpsFargateServiceTaskDefTaskRole5E31DB9D",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ecs.CfnTaskDefinition",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "staging": {
+                    "id": "staging",
+                    "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/staging",
+                    "children": {
+                      "LogGroup": {
+                        "id": "LogGroup",
+                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/staging/LogGroup",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/staging/LogGroup/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                              "aws:cdk:cloudformation:props": {}
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                              "version": "2.133.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_logs.LogGroup",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ecs.ContainerDefinition",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "ExecutionRole": {
+                    "id": "ExecutionRole",
+                    "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole",
+                    "children": {
+                      "ImportExecutionRole": {
+                        "id": "ImportExecutionRole",
+                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/ImportExecutionRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.133.0"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "ecs-tasks.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+                                  ]
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.133.0"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::GetAtt": [
+                                          "VpsFargateServiceTaskDefstagingLogGroup9489A9E9",
+                                          "Arn"
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "VpsFargateServiceTaskDefExecutionRoleDefaultPolicy9957144C",
+                                "roles": [
+                                  {
+                                    "Ref": "VpsFargateServiceTaskDefExecutionRole7A58406D"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.133.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.FargateTaskDefinition",
+                  "version": "2.133.0"
+                }
+              },
+              "Service": {
+                "id": "Service",
+                "path": "VpsEcsStackStaging/VpsFargateService/Service",
+                "children": {
+                  "Service": {
+                    "id": "Service",
+                    "path": "VpsEcsStackStaging/VpsFargateService/Service/Service",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ECS::Service",
+                      "aws:cdk:cloudformation:props": {
+                        "cluster": {
+                          "Ref": "EcsDefaultClusterMnL3mNNYNVpsVpcB12FBA50"
+                        },
+                        "deploymentConfiguration": {
+                          "maximumPercent": 200,
+                          "minimumHealthyPercent": 50,
+                          "alarms": {
+                            "alarmNames": [],
+                            "enable": false,
+                            "rollback": false
+                          }
+                        },
+                        "enableEcsManagedTags": false,
+                        "healthCheckGracePeriodSeconds": 60,
+                        "launchType": "FARGATE",
+                        "loadBalancers": [
+                          {
+                            "targetGroupArn": {
+                              "Ref": "VpsFargateServiceLBPublicListenerECSGroup4CDFD554"
+                            },
+                            "containerName": "staging",
+                            "containerPort": 3000
+                          }
+                        ],
+                        "networkConfiguration": {
+                          "awsvpcConfiguration": {
+                            "assignPublicIp": "ENABLED",
+                            "subnets": [
+                              "subnet-0e4d0bb376f31544e",
+                              "subnet-0b42154679db19569"
+                            ],
+                            "securityGroups": [
+                              {
+                                "Fn::GetAtt": [
+                                  "VpsFargateServiceSecurityGroupA510111C",
+                                  "GroupId"
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "taskDefinition": {
+                          "Ref": "VpsFargateServiceTaskDefF824945B"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ecs.CfnService",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "SecurityGroup": {
+                    "id": "SecurityGroup",
+                    "path": "VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "groupDescription": "VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup",
+                            "securityGroupEgress": [
+                              {
+                                "cidrIp": "0.0.0.0/0",
+                                "description": "Allow all outbound traffic by default",
+                                "ipProtocol": "-1"
+                              }
+                            ],
+                            "vpcId": "vpc-0c1fd07003dc37722"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                          "version": "2.133.0"
+                        }
+                      },
+                      "from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:3000": {
+                        "id": "from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:3000",
+                        "path": "VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:3000",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                          "aws:cdk:cloudformation:props": {
+                            "description": "Load balancer to target",
+                            "fromPort": 3000,
+                            "groupId": {
+                              "Fn::GetAtt": [
+                                "VpsFargateServiceSecurityGroupA510111C",
+                                "GroupId"
+                              ]
+                            },
+                            "ipProtocol": "tcp",
+                            "sourceSecurityGroupId": {
+                              "Fn::GetAtt": [
+                                "VpsFargateServiceLBSecurityGroupD5DF0A57",
+                                "GroupId"
+                              ]
+                            },
+                            "toPort": 3000
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.FargateService",
+                  "version": "2.133.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs_patterns.ApplicationLoadBalancedFargateService",
+              "version": "2.133.0"
+            }
+          },
+          "EcsDefaultClusterMnL3mNNYNVpsVpc": {
+            "id": "EcsDefaultClusterMnL3mNNYNVpsVpc",
+            "path": "VpsEcsStackStaging/EcsDefaultClusterMnL3mNNYNVpsVpc",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "VpsEcsStackStaging/EcsDefaultClusterMnL3mNNYNVpsVpc/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Cluster",
+                  "aws:cdk:cloudformation:props": {}
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnCluster",
+                  "version": "2.133.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.Cluster",
+              "version": "2.133.0"
+            }
+          },
+          "VpsApi": {
+            "id": "VpsApi",
+            "path": "VpsEcsStackStaging/VpsApi",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "VpsEcsStackStaging/VpsApi/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Route53::RecordSet",
+                  "aws:cdk:cloudformation:props": {
+                    "hostedZoneId": "Z07469572CN5VXN0JKWRR",
+                    "name": "vps.waldenlocaltesting.com.",
+                    "resourceRecords": [
+                      {
+                        "Fn::GetAtt": [
+                          "VpsFargateServiceLBAF5725FA",
+                          "DNSName"
+                        ]
+                      }
+                    ],
+                    "ttl": "1800",
+                    "type": "CNAME"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_route53.CfnRecordSet",
+                  "version": "2.133.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_route53.CnameRecord",
+              "version": "2.133.0"
+            }
+          },
+          "VpsPipeline": {
+            "id": "VpsPipeline",
+            "path": "VpsEcsStackStaging/VpsPipeline",
+            "children": {
+              "ArtifactsBucketEncryptionKey": {
+                "id": "ArtifactsBucketEncryptionKey",
+                "path": "VpsEcsStackStaging/VpsPipeline/ArtifactsBucketEncryptionKey",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VpsEcsStackStaging/VpsPipeline/ArtifactsBucketEncryptionKey/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::KMS::Key",
+                      "aws:cdk:cloudformation:props": {
+                        "keyPolicy": {
+                          "Statement": [
+                            {
+                              "Action": "kms:*",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": "arn:aws:iam::781713655045:root"
+                              },
+                              "Resource": "*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_kms.CfnKey",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_kms.Key",
+                  "version": "2.133.0"
+                }
+              },
+              "ArtifactsBucketEncryptionKeyAlias": {
+                "id": "ArtifactsBucketEncryptionKeyAlias",
+                "path": "VpsEcsStackStaging/VpsPipeline/ArtifactsBucketEncryptionKeyAlias",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VpsEcsStackStaging/VpsPipeline/ArtifactsBucketEncryptionKeyAlias/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::KMS::Alias",
+                      "aws:cdk:cloudformation:props": {
+                        "aliasName": "alias/codepipeline-vpsecsstackstaging-vpspipeline-7df0b635",
+                        "targetKeyId": {
+                          "Fn::GetAtt": [
+                            "VpsPipelineArtifactsBucketEncryptionKeyC5348ED9",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_kms.CfnAlias",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_kms.Alias",
+                  "version": "2.133.0"
+                }
+              },
+              "ArtifactsBucket": {
+                "id": "ArtifactsBucket",
+                "path": "VpsEcsStackStaging/VpsPipeline/ArtifactsBucket",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VpsEcsStackStaging/VpsPipeline/ArtifactsBucket/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                      "aws:cdk:cloudformation:props": {
+                        "bucketEncryption": {
+                          "serverSideEncryptionConfiguration": [
+                            {
+                              "serverSideEncryptionByDefault": {
+                                "sseAlgorithm": "aws:kms",
+                                "kmsMasterKeyId": {
+                                  "Fn::GetAtt": [
+                                    "VpsPipelineArtifactsBucketEncryptionKeyC5348ED9",
+                                    "Arn"
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "publicAccessBlockConfiguration": {
+                          "blockPublicAcls": true,
+                          "blockPublicPolicy": true,
+                          "ignorePublicAcls": true,
+                          "restrictPublicBuckets": true
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "Policy": {
+                    "id": "Policy",
+                    "path": "VpsEcsStackStaging/VpsPipeline/ArtifactsBucket/Policy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/VpsPipeline/ArtifactsBucket/Policy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                          "aws:cdk:cloudformation:props": {
+                            "bucket": {
+                              "Ref": "VpsPipelineArtifactsBucketBA4B0869"
+                            },
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "s3:*",
+                                  "Condition": {
+                                    "Bool": {
+                                      "aws:SecureTransport": "false"
+                                    }
+                                  },
+                                  "Effect": "Deny",
+                                  "Principal": {
+                                    "AWS": "*"
+                                  },
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "VpsPipelineArtifactsBucketBA4B0869",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "VpsPipelineArtifactsBucketBA4B0869",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.Bucket",
+                  "version": "2.133.0"
+                }
+              },
+              "Role": {
+                "id": "Role",
+                "path": "VpsEcsStackStaging/VpsPipeline/Role",
+                "children": {
+                  "ImportRole": {
+                    "id": "ImportRole",
+                    "path": "VpsEcsStackStaging/VpsPipeline/Role/ImportRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VpsEcsStackStaging/VpsPipeline/Role/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "codepipeline.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "VpsEcsStackStaging/VpsPipeline/Role/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/VpsPipeline/Role/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "s3:Abort*",
+                                    "s3:DeleteObject*",
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*",
+                                    "s3:PutObject",
+                                    "s3:PutObjectLegalHold",
+                                    "s3:PutObjectRetention",
+                                    "s3:PutObjectTagging",
+                                    "s3:PutObjectVersionTagging"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "VpsPipelineArtifactsBucketBA4B0869",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "VpsPipelineArtifactsBucketBA4B0869",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "kms:Decrypt",
+                                    "kms:DescribeKey",
+                                    "kms:Encrypt",
+                                    "kms:GenerateDataKey*",
+                                    "kms:ReEncrypt*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "VpsPipelineArtifactsBucketEncryptionKeyC5348ED9",
+                                      "Arn"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "VpsPipelineBuildConvertVpsEcrOutputToImageDefinitionsCodePipelineActionRole3F645C9D",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::GetAtt": [
+                                        "VpsPipelineDeployVpsEcsDeployActionCodePipelineActionRole72782F93",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::GetAtt": [
+                                        "VpsPipelineSourceListenVpsEcrPushCodePipelineActionRoleC85135DC",
+                                        "Arn"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "VpsPipelineRoleDefaultPolicy4E89DD94",
+                            "roles": [
+                              {
+                                "Ref": "VpsPipelineRoleFE5392AA"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.133.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "VpsEcsStackStaging/VpsPipeline/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CodePipeline::Pipeline",
+                  "aws:cdk:cloudformation:props": {
+                    "artifactStore": {
+                      "type": "S3",
+                      "location": {
+                        "Ref": "VpsPipelineArtifactsBucketBA4B0869"
+                      },
+                      "encryptionKey": {
+                        "type": "KMS",
+                        "id": {
+                          "Fn::GetAtt": [
+                            "VpsPipelineArtifactsBucketEncryptionKeyC5348ED9",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "name": "vps_pipeline",
+                    "roleArn": {
+                      "Fn::GetAtt": [
+                        "VpsPipelineRoleFE5392AA",
+                        "Arn"
+                      ]
+                    },
+                    "stages": [
+                      {
+                        "name": "Source",
+                        "actions": [
+                          {
+                            "name": "ListenVpsEcrPush",
+                            "outputArtifacts": [
+                              {
+                                "name": "Artifact_Source_ListenVpsEcrPush"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Source",
+                              "version": "1",
+                              "owner": "AWS",
+                              "provider": "ECR"
+                            },
+                            "configuration": {
+                              "RepositoryName": {
+                                "Ref": "VpsEcrRepository8A7AD2D3"
+                              },
+                              "ImageTag": "latest"
+                            },
+                            "runOrder": 1,
+                            "roleArn": {
+                              "Fn::GetAtt": [
+                                "VpsPipelineSourceListenVpsEcrPushCodePipelineActionRoleC85135DC",
+                                "Arn"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Build",
+                        "actions": [
+                          {
+                            "name": "ConvertVpsEcrOutputToImageDefinitions",
+                            "inputArtifacts": [
+                              {
+                                "name": "Artifact_Source_ListenVpsEcrPush"
+                              }
+                            ],
+                            "outputArtifacts": [
+                              {
+                                "name": "Artifact_Build_ConvertVpsEcrOutputToImageDefinitions"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Build",
+                              "version": "1",
+                              "owner": "AWS",
+                              "provider": "CodeBuild"
+                            },
+                            "configuration": {
+                              "ProjectName": {
+                                "Ref": "vpscodepipeline3AA9DA99"
+                              }
+                            },
+                            "runOrder": 1,
+                            "roleArn": {
+                              "Fn::GetAtt": [
+                                "VpsPipelineBuildConvertVpsEcrOutputToImageDefinitionsCodePipelineActionRole3F645C9D",
+                                "Arn"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Deploy",
+                        "actions": [
+                          {
+                            "name": "VpsEcsDeployAction",
+                            "inputArtifacts": [
+                              {
+                                "name": "Artifact_Build_ConvertVpsEcrOutputToImageDefinitions"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Deploy",
+                              "version": "1",
+                              "owner": "AWS",
+                              "provider": "ECS"
+                            },
+                            "configuration": {
+                              "ClusterName": {
+                                "Ref": "EcsDefaultClusterMnL3mNNYNVpsVpcB12FBA50"
+                              },
+                              "ServiceName": {
+                                "Fn::GetAtt": [
+                                  "VpsFargateService62188E5E",
+                                  "Name"
+                                ]
+                              }
+                            },
+                            "runOrder": 1,
+                            "roleArn": {
+                              "Fn::GetAtt": [
+                                "VpsPipelineDeployVpsEcsDeployActionCodePipelineActionRole72782F93",
+                                "Arn"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codepipeline.CfnPipeline",
+                  "version": "2.133.0"
+                }
+              },
+              "Source": {
+                "id": "Source",
+                "path": "VpsEcsStackStaging/VpsPipeline/Source",
+                "children": {
+                  "ListenVpsEcrPush": {
+                    "id": "ListenVpsEcrPush",
+                    "path": "VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush",
+                    "children": {
+                      "CodePipelineActionRole": {
+                        "id": "CodePipelineActionRole",
+                        "path": "VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/CodePipelineActionRole",
+                        "children": {
+                          "ImportCodePipelineActionRole": {
+                            "id": "ImportCodePipelineActionRole",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/CodePipelineActionRole/ImportCodePipelineActionRole",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.Resource",
+                              "version": "2.133.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/CodePipelineActionRole/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "AWS": "arn:aws:iam::781713655045:root"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                              "version": "2.133.0"
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/CodePipelineActionRole/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/CodePipelineActionRole/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": "ecr:DescribeImages",
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "VpsEcrRepository8A7AD2D3",
+                                              "Arn"
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "Action": [
+                                            "s3:Abort*",
+                                            "s3:DeleteObject*",
+                                            "s3:PutObject",
+                                            "s3:PutObjectLegalHold",
+                                            "s3:PutObjectRetention",
+                                            "s3:PutObjectTagging",
+                                            "s3:PutObjectVersionTagging"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": [
+                                            {
+                                              "Fn::GetAtt": [
+                                                "VpsPipelineArtifactsBucketBA4B0869",
+                                                "Arn"
+                                              ]
+                                            },
+                                            {
+                                              "Fn::Join": [
+                                                "",
+                                                [
+                                                  {
+                                                    "Fn::GetAtt": [
+                                                      "VpsPipelineArtifactsBucketBA4B0869",
+                                                      "Arn"
+                                                    ]
+                                                  },
+                                                  "/*"
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "Action": [
+                                            "kms:Decrypt",
+                                            "kms:Encrypt",
+                                            "kms:GenerateDataKey*",
+                                            "kms:ReEncrypt*"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "VpsPipelineArtifactsBucketEncryptionKeyC5348ED9",
+                                              "Arn"
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "VpsPipelineSourceListenVpsEcrPushCodePipelineActionRoleDefaultPolicy5C6DE42B",
+                                    "roles": [
+                                      {
+                                        "Ref": "VpsPipelineSourceListenVpsEcrPushCodePipelineActionRoleC85135DC"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                                  "version": "2.133.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.Policy",
+                              "version": "2.133.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Role",
+                          "version": "2.133.0"
+                        }
+                      },
+                      "VpsEcsStackStagingVpsPipeline7DF0B635SourceEventRule": {
+                        "id": "VpsEcsStackStagingVpsPipeline7DF0B635SourceEventRule",
+                        "path": "VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/VpsEcsStackStagingVpsPipeline7DF0B635SourceEventRule",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/VpsEcsStackStagingVpsPipeline7DF0B635SourceEventRule/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Events::Rule",
+                              "aws:cdk:cloudformation:props": {
+                                "eventPattern": {
+                                  "detail-type": [
+                                    "ECR Image Action"
+                                  ],
+                                  "source": [
+                                    "aws.ecr"
+                                  ],
+                                  "detail": {
+                                    "result": [
+                                      "SUCCESS"
+                                    ],
+                                    "repository-name": [
+                                      {
+                                        "Ref": "VpsEcrRepository8A7AD2D3"
+                                      }
+                                    ],
+                                    "image-tag": [
+                                      "latest"
+                                    ],
+                                    "action-type": [
+                                      "PUSH"
+                                    ]
+                                  }
+                                },
+                                "state": "ENABLED",
+                                "targets": [
+                                  {
+                                    "id": "Target0",
+                                    "arn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:aws:codepipeline:us-east-1:781713655045:",
+                                          {
+                                            "Ref": "VpsPipeline1F3986E6"
+                                          }
+                                        ]
+                                      ]
+                                    },
+                                    "roleArn": {
+                                      "Fn::GetAtt": [
+                                        "VpsPipelineEventsRoleB0A08CE5",
+                                        "Arn"
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_events.CfnRule",
+                              "version": "2.133.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_events.Rule",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.3.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "EventsRole": {
+                "id": "EventsRole",
+                "path": "VpsEcsStackStaging/VpsPipeline/EventsRole",
+                "children": {
+                  "ImportEventsRole": {
+                    "id": "ImportEventsRole",
+                    "path": "VpsEcsStackStaging/VpsPipeline/EventsRole/ImportEventsRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VpsEcsStackStaging/VpsPipeline/EventsRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "events.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.133.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "VpsEcsStackStaging/VpsPipeline/EventsRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VpsEcsStackStaging/VpsPipeline/EventsRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "codepipeline:StartPipelineExecution",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:aws:codepipeline:us-east-1:781713655045:",
+                                        {
+                                          "Ref": "VpsPipeline1F3986E6"
+                                        }
+                                      ]
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "VpsPipelineEventsRoleDefaultPolicy69CD67CB",
+                            "roles": [
+                              {
+                                "Ref": "VpsPipelineEventsRoleB0A08CE5"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.133.0"
+                }
+              },
+              "Build": {
+                "id": "Build",
+                "path": "VpsEcsStackStaging/VpsPipeline/Build",
+                "children": {
+                  "ConvertVpsEcrOutputToImageDefinitions": {
+                    "id": "ConvertVpsEcrOutputToImageDefinitions",
+                    "path": "VpsEcsStackStaging/VpsPipeline/Build/ConvertVpsEcrOutputToImageDefinitions",
+                    "children": {
+                      "CodePipelineActionRole": {
+                        "id": "CodePipelineActionRole",
+                        "path": "VpsEcsStackStaging/VpsPipeline/Build/ConvertVpsEcrOutputToImageDefinitions/CodePipelineActionRole",
+                        "children": {
+                          "ImportCodePipelineActionRole": {
+                            "id": "ImportCodePipelineActionRole",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Build/ConvertVpsEcrOutputToImageDefinitions/CodePipelineActionRole/ImportCodePipelineActionRole",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.Resource",
+                              "version": "2.133.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Build/ConvertVpsEcrOutputToImageDefinitions/CodePipelineActionRole/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "AWS": "arn:aws:iam::781713655045:root"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                              "version": "2.133.0"
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Build/ConvertVpsEcrOutputToImageDefinitions/CodePipelineActionRole/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "VpsEcsStackStaging/VpsPipeline/Build/ConvertVpsEcrOutputToImageDefinitions/CodePipelineActionRole/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": [
+                                            "codebuild:BatchGetBuilds",
+                                            "codebuild:StartBuild",
+                                            "codebuild:StopBuild"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "vpscodepipeline3AA9DA99",
+                                              "Arn"
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "VpsPipelineBuildConvertVpsEcrOutputToImageDefinitionsCodePipelineActionRoleDefaultPolicyD32D85B4",
+                                    "roles": [
+                                      {
+                                        "Ref": "VpsPipelineBuildConvertVpsEcrOutputToImageDefinitionsCodePipelineActionRole3F645C9D"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                                  "version": "2.133.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.Policy",
+                              "version": "2.133.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Role",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.3.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "Deploy": {
+                "id": "Deploy",
+                "path": "VpsEcsStackStaging/VpsPipeline/Deploy",
+                "children": {
+                  "VpsEcsDeployAction": {
+                    "id": "VpsEcsDeployAction",
+                    "path": "VpsEcsStackStaging/VpsPipeline/Deploy/VpsEcsDeployAction",
+                    "children": {
+                      "CodePipelineActionRole": {
+                        "id": "CodePipelineActionRole",
+                        "path": "VpsEcsStackStaging/VpsPipeline/Deploy/VpsEcsDeployAction/CodePipelineActionRole",
+                        "children": {
+                          "ImportCodePipelineActionRole": {
+                            "id": "ImportCodePipelineActionRole",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Deploy/VpsEcsDeployAction/CodePipelineActionRole/ImportCodePipelineActionRole",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.Resource",
+                              "version": "2.133.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Deploy/VpsEcsDeployAction/CodePipelineActionRole/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "AWS": "arn:aws:iam::781713655045:root"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                              "version": "2.133.0"
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "VpsEcsStackStaging/VpsPipeline/Deploy/VpsEcsDeployAction/CodePipelineActionRole/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "VpsEcsStackStaging/VpsPipeline/Deploy/VpsEcsDeployAction/CodePipelineActionRole/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": [
+                                            "ecs:DescribeServices",
+                                            "ecs:DescribeTaskDefinition",
+                                            "ecs:DescribeTasks",
+                                            "ecs:ListTasks",
+                                            "ecs:RegisterTaskDefinition",
+                                            "ecs:TagResource",
+                                            "ecs:UpdateService"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": "*"
+                                        },
+                                        {
+                                          "Action": "iam:PassRole",
+                                          "Condition": {
+                                            "StringEqualsIfExists": {
+                                              "iam:PassedToService": [
+                                                "ec2.amazonaws.com",
+                                                "ecs-tasks.amazonaws.com"
+                                              ]
+                                            }
+                                          },
+                                          "Effect": "Allow",
+                                          "Resource": "*"
+                                        },
+                                        {
+                                          "Action": [
+                                            "s3:GetBucket*",
+                                            "s3:GetObject*",
+                                            "s3:List*"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": [
+                                            {
+                                              "Fn::GetAtt": [
+                                                "VpsPipelineArtifactsBucketBA4B0869",
+                                                "Arn"
+                                              ]
+                                            },
+                                            {
+                                              "Fn::Join": [
+                                                "",
+                                                [
+                                                  {
+                                                    "Fn::GetAtt": [
+                                                      "VpsPipelineArtifactsBucketBA4B0869",
+                                                      "Arn"
+                                                    ]
+                                                  },
+                                                  "/*"
+                                                ]
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "Action": [
+                                            "kms:Decrypt",
+                                            "kms:DescribeKey"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "VpsPipelineArtifactsBucketEncryptionKeyC5348ED9",
+                                              "Arn"
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "VpsPipelineDeployVpsEcsDeployActionCodePipelineActionRoleDefaultPolicy6D7BFEAD",
+                                    "roles": [
+                                      {
+                                        "Ref": "VpsPipelineDeployVpsEcsDeployActionCodePipelineActionRole72782F93"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                                  "version": "2.133.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.Policy",
+                              "version": "2.133.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Role",
+                          "version": "2.133.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.3.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_codepipeline.Pipeline",
+              "version": "2.133.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "VpsEcsStackStaging/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "VpsEcsStackStaging/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.133.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "VpsEcsStackStaging/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.133.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "VpsEcsStackStaging/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.133.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.133.0"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.3.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.133.0"
+    }
+  }
+}

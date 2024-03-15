@@ -1,0 +1,19 @@
+{
+  "version": "36.0.0",
+  "files": {
+    "76b860f98ffa70cce8bd685e5534958de82b684ffb604b110a1f43abe7e97308": {
+      "source": {
+        "path": "VpsEcsStackProd.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "76b860f98ffa70cce8bd685e5534958de82b684ffb604b110a1f43abe7e97308.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

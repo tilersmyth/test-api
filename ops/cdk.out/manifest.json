@@ -1,0 +1,329 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "VpsEcsStackStaging.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "VpsEcsStackStaging.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "VpsEcsStackStaging": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://781713655045/us-east-1",
+      "properties": {
+        "templateFile": "VpsEcsStackStaging.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::781713655045:role/cdk-hnb659fds-deploy-role-781713655045-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::781713655045:role/cdk-hnb659fds-cfn-exec-role-781713655045-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-781713655045-us-east-1/e8a4bc24d96dce2cc19e1c93a7801da76dbd86120d47dde06867332502dae7d5.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "VpsEcsStackStaging.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::781713655045:role/cdk-hnb659fds-lookup-role-781713655045-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "VpsEcsStackStaging.assets"
+      ],
+      "metadata": {
+        "/VpsEcsStackStaging/AcmHostedCertificate/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AcmHostedCertificateA5AF1191"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsEcrRepository/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsEcrRepository8A7AD2D3"
+          }
+        ],
+        "/VpsEcsStackStaging/vps-codepipeline/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "vpscodepipelineRoleB0734E91"
+          }
+        ],
+        "/VpsEcsStackStaging/vps-codepipeline/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "vpscodepipelineRoleDefaultPolicy3DC1B7C4"
+          }
+        ],
+        "/VpsEcsStackStaging/vps-codepipeline/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "vpscodepipeline3AA9DA99"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/LB/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceLBAF5725FA"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceLBSecurityGroupD5DF0A57"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:3000": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceLBSecurityGrouptoVpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA13000FD262E00"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/LB/PublicListener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceLBPublicListenerF1C92789"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/LB/PublicListener/ECSGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceLBPublicListenerECSGroup4CDFD554"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/LB/PublicRedirectListener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceLBPublicRedirectListenerBD7F6A75"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/LoadBalancerDNS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceLoadBalancerDNSDBB0409D"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/ServiceURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceServiceURL34241B92"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/TaskDef/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceTaskDefTaskRole5E31DB9D"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/TaskDef/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceTaskDefF824945B"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/TaskDef/staging/LogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceTaskDefstagingLogGroup9489A9E9"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceTaskDefExecutionRole7A58406D"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceTaskDefExecutionRoleDefaultPolicy9957144C"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/Service/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateService62188E5E"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceSecurityGroupA510111C"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:3000": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsFargateServiceSecurityGroupfromVpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918300043414145"
+          }
+        ],
+        "/VpsEcsStackStaging/EcsDefaultClusterMnL3mNNYNVpsVpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcsDefaultClusterMnL3mNNYNVpsVpcB12FBA50"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsApi2224C8B5"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "V1 pipeline type is implicitly selected when `pipelineType` is not set. If you want to use V2 type, set `PipelineType.V2`. [ack: @aws-cdk/aws-codepipeline:unspecifiedPipelineType]",
+            "trace": [
+              "Annotations.addMessage (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1608)",
+              "Annotations.addWarningV2 (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/aws-cdk-lib/core/lib/annotations.js:1:825)",
+              "new Pipeline (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/aws-cdk-lib/aws-codepipeline/lib/pipeline.js:1:6677)",
+              "new Ecstack (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/lib/ecs-stack.ts:92:22)",
+              "Object.<anonymous> (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/bin/app.ts:16:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1375:14)",
+              "Module.m._compile (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/ts-node/src/index.ts:1618:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1434:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/ts-node/src/index.ts:1621:12)",
+              "Module.load (node:internal/modules/cjs/loader:1206:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:1022:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:142:12)",
+              "phase4 (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/ts-node/src/bin.ts:649:14)",
+              "bootstrap (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/ts-node/src/bin.ts:95:10)",
+              "main (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/ts-node/src/bin.ts:55:10)",
+              "Object.<anonymous> (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/ts-node/src/bin.ts:800:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1375:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1434:10)",
+              "Module.load (node:internal/modules/cjs/loader:1206:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:1022:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:142:12)",
+              "node:internal/main/run_main_module:28:49"
+            ]
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/ArtifactsBucketEncryptionKey/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineArtifactsBucketEncryptionKeyC5348ED9"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/ArtifactsBucketEncryptionKeyAlias/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineArtifactsBucketEncryptionKeyAlias1FFD0008"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/ArtifactsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineArtifactsBucketBA4B0869"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/ArtifactsBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineArtifactsBucketPolicy84A3E068"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineRoleFE5392AA"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineRoleDefaultPolicy4E89DD94"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipeline1F3986E6"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineSourceListenVpsEcrPushCodePipelineActionRoleC85135DC"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineSourceListenVpsEcrPushCodePipelineActionRoleDefaultPolicy5C6DE42B"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Source/ListenVpsEcrPush/VpsEcsStackStagingVpsPipeline7DF0B635SourceEventRule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineSourceListenVpsEcrPushVpsEcsStackStagingVpsPipeline7DF0B635SourceEventRuleAEF8779F"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/EventsRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineEventsRoleB0A08CE5"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/EventsRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineEventsRoleDefaultPolicy69CD67CB"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Build/ConvertVpsEcrOutputToImageDefinitions/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineBuildConvertVpsEcrOutputToImageDefinitionsCodePipelineActionRole3F645C9D"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Build/ConvertVpsEcrOutputToImageDefinitions/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineBuildConvertVpsEcrOutputToImageDefinitionsCodePipelineActionRoleDefaultPolicyD32D85B4"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Deploy/VpsEcsDeployAction/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineDeployVpsEcsDeployActionCodePipelineActionRole72782F93"
+          }
+        ],
+        "/VpsEcsStackStaging/VpsPipeline/Deploy/VpsEcsDeployAction/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpsPipelineDeployVpsEcsDeployActionCodePipelineActionRoleDefaultPolicy6D7BFEAD"
+          }
+        ],
+        "/VpsEcsStackStaging/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/VpsEcsStackStaging/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/VpsEcsStackStaging/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "VpsEcsStackStaging"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
