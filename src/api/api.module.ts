@@ -1,9 +1,15 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
+import { ApiMiddleware } from './api.middleware';
 import { NonconformingProductModule } from './nonconforming-product/nonconforming-product.module';
 import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [UserModule, NonconformingProductModule],
+  imports: [ConfigModule.forRoot(), UserModule, NonconformingProductModule],
 })
-export class ApiModule {}
+export class ApiModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ApiMiddleware).forRoutes('*');
+  }
+}
