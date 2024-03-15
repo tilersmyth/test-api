@@ -3,7 +3,7 @@
 ## Development
 *Note: server is intended to connect to existing database setup for the virtual pickseet*
 1. Clone and `cd` into repo
-2. `npm run install`
+2. `npm install`
 3. `cp sample.env .env` and enter your local database credentials
 4. `npm run start:dev`
 
