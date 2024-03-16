@@ -3,4 +3,5 @@ export interface StageContext {
   vpcId: string;
   hostedZoneId: string;
   zoneName: string;
+  secretsArn: string;
 }

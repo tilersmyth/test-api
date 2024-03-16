@@ -19,7 +19,8 @@
       "awsAccountId": "781713655045",
       "vpcId": "vpc-0c1fd07003dc37722",
       "hostedZoneId": "Z07469572CN5VXN0JKWRR",
-      "zoneName": "waldenlocaltesting.com"
+      "zoneName": "waldenlocaltesting.com",
+      "secretsArn": "arn:aws:secretsmanager:us-east-1:781713655045:secret:vps/staging-UOgtUC"
     },
     "prod": {
       "awsAccountId": "187107690983",
