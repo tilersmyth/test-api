@@ -15,6 +15,7 @@ import * as ecspatterns from 'aws-cdk-lib/aws-ecs-patterns';
 import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as route53 from 'aws-cdk-lib/aws-route53';
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { Construct } from 'constructs';
 
 import { StageContext } from '../types/stage-context';
@@ -30,13 +31,18 @@ interface Props extends cdk.StackProps {
 
 export class Ecstack extends cdk.Stack {
   private repoName: string;
+  private props: Props;
   private hostedZone: cdk.aws_route53.IHostedZone;
   private certificate: cdk.aws_certificatemanager.Certificate;
 
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id, props);
 
+    codebuild.BuildEnvironmentVariableType;
+
     this.repoName = props.stageName;
+
+    this.props = props;
 
     this.hostedZone = route53.HostedZone.fromHostedZoneAttributes(
       this,
@@ -196,6 +202,32 @@ export class Ecstack extends cdk.Stack {
     ecrRepository: ecr.Repository,
     pipelineProject: PipelineProject,
   ) {
+    const ecsRole = new iam.Role(scope, 'EcsExecutionRole', {
+      assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
+    });
+
+    const vpsSecrets = secretsmanager.Secret.fromSecretPartialArn(
+      scope,
+      'VpsSecrets',
+      this.props.config.secretsArn,
+    );
+
+    ecsRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        resources: [vpsSecrets.secretArn],
+        actions: [
+          'secretsmanager:GetSecretValue',
+          'secretsmanager:DescribeSecret',
+        ],
+      }),
+    );
+
+    const secrets = ['DATABASE_URL', 'API_KEY'].reduce((acc, key) => {
+      acc[key] = ecs.Secret.fromSecretsManager(vpsSecrets, key);
+      return acc;
+    }, {} as { [key: string]: cdk.aws_ecs.Secret });
+
     const fargateService =
       new ecspatterns.ApplicationLoadBalancedFargateService(
         scope,
@@ -204,7 +236,7 @@ export class Ecstack extends cdk.Stack {
           vpc,
           memoryLimitMiB: 512,
           cpu: 256,
-          assignPublicIp: true,
+          assignPublicIp: false,
           certificate: this.certificate,
           redirectHTTP: true,
           listenerPort: 443,
@@ -216,6 +248,9 @@ export class Ecstack extends cdk.Stack {
               'tilersmyth/ecs-placeholder-v2:latest',
             ),
             containerPort: 5000,
+            secrets,
+            taskRole: ecsRole,
+            executionRole: ecsRole,
           },
         },
       );
@@ -227,7 +262,7 @@ export class Ecstack extends cdk.Stack {
     );
 
     fargateService.targetGroup.configureHealthCheck({
-      path: '/api/health',
+      path: '/health',
       healthyHttpCodes: '200-299',
       interval: cdk.Duration.seconds(45),
       timeout: cdk.Duration.seconds(30),
@@ -245,7 +280,7 @@ export class Ecstack extends cdk.Stack {
       '30',
     );
 
-    new route53.CnameRecord(this, 'VpsApi', {
+    new route53.CnameRecord(scope, 'VpsApi', {
       zone: this.hostedZone,
       recordName: 'vps',
       domainName: fargateService.loadBalancer.loadBalancerDnsName,

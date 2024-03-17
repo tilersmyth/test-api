@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::781713655045:role/cdk-hnb659fds-deploy-role-781713655045-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::781713655045:role/cdk-hnb659fds-cfn-exec-role-781713655045-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-781713655045-us-east-1/e8a4bc24d96dce2cc19e1c93a7801da76dbd86120d47dde06867332502dae7d5.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-781713655045-us-east-1/1739a0fae0b1fdde17639b7182d0b413d31752c2e3bfcb037c92d40582e5a644.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -64,6 +64,18 @@
             "data": "vpscodepipeline3AA9DA99"
           }
         ],
+        "/VpsEcsStackStaging/EcsExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcsExecutionRoleFD93B7A2"
+          }
+        ],
+        "/VpsEcsStackStaging/EcsExecutionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EcsExecutionRoleDefaultPolicy9114F99B"
+          }
+        ],
         "/VpsEcsStackStaging/VpsFargateService/LB/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -76,10 +88,10 @@
             "data": "VpsFargateServiceLBSecurityGroupD5DF0A57"
           }
         ],
-        "/VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:3000": [
+        "/VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:5000": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "VpsFargateServiceLBSecurityGrouptoVpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA13000FD262E00"
+            "data": "VpsFargateServiceLBSecurityGrouptoVpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA150009603CD0C"
           }
         ],
         "/VpsEcsStackStaging/VpsFargateService/LB/PublicListener/Resource": [
@@ -112,12 +124,6 @@
             "data": "VpsFargateServiceServiceURL34241B92"
           }
         ],
-        "/VpsEcsStackStaging/VpsFargateService/TaskDef/TaskRole/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "VpsFargateServiceTaskDefTaskRole5E31DB9D"
-          }
-        ],
         "/VpsEcsStackStaging/VpsFargateService/TaskDef/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -128,18 +134,6 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "VpsFargateServiceTaskDefstagingLogGroup9489A9E9"
-          }
-        ],
-        "/VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "VpsFargateServiceTaskDefExecutionRole7A58406D"
-          }
-        ],
-        "/VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/DefaultPolicy/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "VpsFargateServiceTaskDefExecutionRoleDefaultPolicy9957144C"
           }
         ],
         "/VpsEcsStackStaging/VpsFargateService/Service/Service": [
@@ -154,10 +148,10 @@
             "data": "VpsFargateServiceSecurityGroupA510111C"
           }
         ],
-        "/VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:3000": [
+        "/VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:5000": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "VpsFargateServiceSecurityGroupfromVpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918300043414145"
+            "data": "VpsFargateServiceSecurityGroupfromVpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A3591850002265A7F8"
           }
         ],
         "/VpsEcsStackStaging/EcsDefaultClusterMnL3mNNYNVpsVpc/Resource": [
@@ -180,7 +174,7 @@
               "Annotations.addMessage (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1608)",
               "Annotations.addWarningV2 (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/aws-cdk-lib/core/lib/annotations.js:1:825)",
               "new Pipeline (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/aws-cdk-lib/aws-codepipeline/lib/pipeline.js:1:6677)",
-              "new Ecstack (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/lib/ecs-stack.ts:92:22)",
+              "new Ecstack (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/lib/ecs-stack.ts:98:22)",
               "Object.<anonymous> (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/bin/app.ts:16:1)",
               "Module._compile (node:internal/modules/cjs/loader:1375:14)",
               "Module.m._compile (/Users/tylersmith/Documents/projects/sandbox/ncp-server/ops/node_modules/ts-node/src/index.ts:1618:23)",

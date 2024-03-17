@@ -493,6 +493,129 @@
               "version": "2.133.0"
             }
           },
+          "EcsExecutionRole": {
+            "id": "EcsExecutionRole",
+            "path": "VpsEcsStackStaging/EcsExecutionRole",
+            "children": {
+              "ImportEcsExecutionRole": {
+                "id": "ImportEcsExecutionRole",
+                "path": "VpsEcsStackStaging/EcsExecutionRole/ImportEcsExecutionRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.133.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "VpsEcsStackStaging/EcsExecutionRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "ecs-tasks.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "managedPolicyArns": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.133.0"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "VpsEcsStackStaging/EcsExecutionRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VpsEcsStackStaging/EcsExecutionRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "secretsmanager:DescribeSecret",
+                                "secretsmanager:GetSecretValue"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": [
+                                "arn:aws:secretsmanager:us-east-1:781713655045:secret:vps/staging-UOgtUC",
+                                "arn:aws:secretsmanager:us-east-1:781713655045:secret:vps/staging-UOgtUC-??????"
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": {
+                                "Fn::GetAtt": [
+                                  "VpsFargateServiceTaskDefstagingLogGroup9489A9E9",
+                                  "Arn"
+                                ]
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "EcsExecutionRoleDefaultPolicy9114F99B",
+                        "roles": [
+                          {
+                            "Ref": "EcsExecutionRoleFD93B7A2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.133.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.133.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.133.0"
+            }
+          },
+          "VpsSecrets": {
+            "id": "VpsSecrets",
+            "path": "VpsEcsStackStaging/VpsSecrets",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.133.0"
+            }
+          },
           "VpsFargateService": {
             "id": "VpsFargateService",
             "path": "VpsEcsStackStaging/VpsFargateService",
@@ -569,9 +692,9 @@
                           "version": "2.133.0"
                         }
                       },
-                      "to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:3000": {
-                        "id": "to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:3000",
-                        "path": "VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:3000",
+                      "to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:5000": {
+                        "id": "to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:5000",
+                        "path": "VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:5000",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupEgress",
                           "aws:cdk:cloudformation:props": {
@@ -582,7 +705,7 @@
                                 "GroupId"
                               ]
                             },
-                            "fromPort": 3000,
+                            "fromPort": 5000,
                             "groupId": {
                               "Fn::GetAtt": [
                                 "VpsFargateServiceLBSecurityGroupD5DF0A57",
@@ -590,7 +713,7 @@
                               ]
                             },
                             "ipProtocol": "tcp",
-                            "toPort": 3000
+                            "toPort": 5000
                           }
                         },
                         "constructInfo": {
@@ -652,7 +775,7 @@
                               "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
                               "aws:cdk:cloudformation:props": {
                                 "healthCheckIntervalSeconds": 45,
-                                "healthCheckPath": "/api/health",
+                                "healthCheckPath": "/health",
                                 "healthCheckTimeoutSeconds": 30,
                                 "healthyThresholdCount": 2,
                                 "matcher": {
@@ -760,49 +883,6 @@
                 "id": "TaskDef",
                 "path": "VpsEcsStackStaging/VpsFargateService/TaskDef",
                 "children": {
-                  "TaskRole": {
-                    "id": "TaskRole",
-                    "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/TaskRole",
-                    "children": {
-                      "ImportTaskRole": {
-                        "id": "ImportTaskRole",
-                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/TaskRole/ImportTaskRole",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.Resource",
-                          "version": "2.133.0"
-                        }
-                      },
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/TaskRole/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
-                          "aws:cdk:cloudformation:props": {
-                            "assumeRolePolicyDocument": {
-                              "Statement": [
-                                {
-                                  "Action": "sts:AssumeRole",
-                                  "Effect": "Allow",
-                                  "Principal": {
-                                    "Service": "ecs-tasks.amazonaws.com"
-                                  }
-                                }
-                              ],
-                              "Version": "2012-10-17"
-                            }
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
-                          "version": "2.133.0"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_iam.Role",
-                      "version": "2.133.0"
-                    }
-                  },
                   "Resource": {
                     "id": "Resource",
                     "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/Resource",
@@ -812,11 +892,11 @@
                         "containerDefinitions": [
                           {
                             "essential": true,
-                            "image": "tilersmyth/ecs-placeholder:latest",
+                            "image": "tilersmyth/ecs-placeholder-v2:latest",
                             "name": "staging",
                             "portMappings": [
                               {
-                                "containerPort": 3000,
+                                "containerPort": 5000,
                                 "protocol": "tcp"
                               }
                             ],
@@ -829,13 +909,23 @@
                                 "awslogs-stream-prefix": "VpsFargateService",
                                 "awslogs-region": "us-east-1"
                               }
-                            }
+                            },
+                            "secrets": [
+                              {
+                                "name": "DATABASE_URL",
+                                "valueFrom": "arn:aws:secretsmanager:us-east-1:781713655045:secret:vps/staging-UOgtUC:DATABASE_URL::"
+                              },
+                              {
+                                "name": "API_KEY",
+                                "valueFrom": "arn:aws:secretsmanager:us-east-1:781713655045:secret:vps/staging-UOgtUC:API_KEY::"
+                              }
+                            ]
                           }
                         ],
                         "cpu": "256",
                         "executionRoleArn": {
                           "Fn::GetAtt": [
-                            "VpsFargateServiceTaskDefExecutionRole7A58406D",
+                            "EcsExecutionRoleFD93B7A2",
                             "Arn"
                           ]
                         },
@@ -847,7 +937,7 @@
                         ],
                         "taskRoleArn": {
                           "Fn::GetAtt": [
-                            "VpsFargateServiceTaskDefTaskRole5E31DB9D",
+                            "EcsExecutionRoleFD93B7A2",
                             "Arn"
                           ]
                         }
@@ -889,110 +979,6 @@
                       "fqn": "aws-cdk-lib.aws_ecs.ContainerDefinition",
                       "version": "2.133.0"
                     }
-                  },
-                  "ExecutionRole": {
-                    "id": "ExecutionRole",
-                    "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole",
-                    "children": {
-                      "ImportExecutionRole": {
-                        "id": "ImportExecutionRole",
-                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/ImportExecutionRole",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.Resource",
-                          "version": "2.133.0"
-                        }
-                      },
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
-                          "aws:cdk:cloudformation:props": {
-                            "assumeRolePolicyDocument": {
-                              "Statement": [
-                                {
-                                  "Action": "sts:AssumeRole",
-                                  "Effect": "Allow",
-                                  "Principal": {
-                                    "Service": "ecs-tasks.amazonaws.com"
-                                  }
-                                }
-                              ],
-                              "Version": "2012-10-17"
-                            },
-                            "managedPolicyArns": [
-                              {
-                                "Fn::Join": [
-                                  "",
-                                  [
-                                    "arn:",
-                                    {
-                                      "Ref": "AWS::Partition"
-                                    },
-                                    ":iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
-                                  ]
-                                ]
-                              }
-                            ]
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
-                          "version": "2.133.0"
-                        }
-                      },
-                      "DefaultPolicy": {
-                        "id": "DefaultPolicy",
-                        "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/DefaultPolicy",
-                        "children": {
-                          "Resource": {
-                            "id": "Resource",
-                            "path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/DefaultPolicy/Resource",
-                            "attributes": {
-                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
-                              "aws:cdk:cloudformation:props": {
-                                "policyDocument": {
-                                  "Statement": [
-                                    {
-                                      "Action": [
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                      ],
-                                      "Effect": "Allow",
-                                      "Resource": {
-                                        "Fn::GetAtt": [
-                                          "VpsFargateServiceTaskDefstagingLogGroup9489A9E9",
-                                          "Arn"
-                                        ]
-                                      }
-                                    }
-                                  ],
-                                  "Version": "2012-10-17"
-                                },
-                                "policyName": "VpsFargateServiceTaskDefExecutionRoleDefaultPolicy9957144C",
-                                "roles": [
-                                  {
-                                    "Ref": "VpsFargateServiceTaskDefExecutionRole7A58406D"
-                                  }
-                                ]
-                              }
-                            },
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                              "version": "2.133.0"
-                            }
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.Policy",
-                          "version": "2.133.0"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_iam.Role",
-                      "version": "2.133.0"
-                    }
                   }
                 },
                 "constructInfo": {
@@ -1031,15 +1017,15 @@
                               "Ref": "VpsFargateServiceLBPublicListenerECSGroup4CDFD554"
                             },
                             "containerName": "staging",
-                            "containerPort": 3000
+                            "containerPort": 5000
                           }
                         ],
                         "networkConfiguration": {
                           "awsvpcConfiguration": {
-                            "assignPublicIp": "ENABLED",
+                            "assignPublicIp": "DISABLED",
                             "subnets": [
-                              "subnet-0e4d0bb376f31544e",
-                              "subnet-0b42154679db19569"
+                              "subnet-07a5c088159da224c",
+                              "subnet-0001c138396acd106"
                             ],
                             "securityGroups": [
                               {
@@ -1087,14 +1073,14 @@
                           "version": "2.133.0"
                         }
                       },
-                      "from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:3000": {
-                        "id": "from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:3000",
-                        "path": "VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:3000",
+                      "from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:5000": {
+                        "id": "from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:5000",
+                        "path": "VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:5000",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
                           "aws:cdk:cloudformation:props": {
                             "description": "Load balancer to target",
-                            "fromPort": 3000,
+                            "fromPort": 5000,
                             "groupId": {
                               "Fn::GetAtt": [
                                 "VpsFargateServiceSecurityGroupA510111C",
@@ -1108,7 +1094,7 @@
                                 "GroupId"
                               ]
                             },
-                            "toPort": 3000
+                            "toPort": 5000
                           }
                         },
                         "constructInfo": {

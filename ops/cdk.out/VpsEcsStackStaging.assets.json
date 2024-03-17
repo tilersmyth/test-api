@@ -1,7 +1,7 @@
 {
   "version": "36.0.0",
   "files": {
-    "e8a4bc24d96dce2cc19e1c93a7801da76dbd86120d47dde06867332502dae7d5": {
+    "1739a0fae0b1fdde17639b7182d0b413d31752c2e3bfcb037c92d40582e5a644": {
       "source": {
         "path": "VpsEcsStackStaging.template.json",
         "packaging": "file"
@@ -9,7 +9,7 @@
       "destinations": {
         "781713655045-us-east-1": {
           "bucketName": "cdk-hnb659fds-assets-781713655045-us-east-1",
-          "objectKey": "e8a4bc24d96dce2cc19e1c93a7801da76dbd86120d47dde06867332502dae7d5.json",
+          "objectKey": "1739a0fae0b1fdde17639b7182d0b413d31752c2e3bfcb037c92d40582e5a644.json",
           "region": "us-east-1",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::781713655045:role/cdk-hnb659fds-file-publishing-role-781713655045-us-east-1"
         }

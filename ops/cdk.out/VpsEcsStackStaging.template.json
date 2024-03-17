@@ -338,6 +338,83 @@
     "aws:cdk:path": "VpsEcsStackStaging/vps-codepipeline/Resource"
    }
   },
+  "EcsExecutionRoleFD93B7A2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "VpsEcsStackStaging/EcsExecutionRole/Resource"
+   }
+  },
+  "EcsExecutionRoleDefaultPolicy9114F99B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "arn:aws:secretsmanager:us-east-1:781713655045:secret:vps/staging-UOgtUC",
+        "arn:aws:secretsmanager:us-east-1:781713655045:secret:vps/staging-UOgtUC-??????"
+       ]
+      },
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "VpsFargateServiceTaskDefstagingLogGroup9489A9E9",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "EcsExecutionRoleDefaultPolicy9114F99B",
+    "Roles": [
+     {
+      "Ref": "EcsExecutionRoleFD93B7A2"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "VpsEcsStackStaging/EcsExecutionRole/DefaultPolicy/Resource"
+   }
+  },
   "VpsFargateServiceLBAF5725FA": {
    "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
    "Properties": {
@@ -392,7 +469,7 @@
     "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/Resource"
    }
   },
-  "VpsFargateServiceLBSecurityGrouptoVpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA13000FD262E00": {
+  "VpsFargateServiceLBSecurityGrouptoVpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA150009603CD0C": {
    "Type": "AWS::EC2::SecurityGroupEgress",
    "Properties": {
     "Description": "Load balancer to target",
@@ -402,7 +479,7 @@
       "GroupId"
      ]
     },
-    "FromPort": 3000,
+    "FromPort": 5000,
     "GroupId": {
      "Fn::GetAtt": [
       "VpsFargateServiceLBSecurityGroupD5DF0A57",
@@ -410,10 +487,10 @@
      ]
     },
     "IpProtocol": "tcp",
-    "ToPort": 3000
+    "ToPort": 5000
    },
    "Metadata": {
-    "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:3000"
+    "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/LB/SecurityGroup/to VpsEcsStackStagingVpsFargateServiceSecurityGroupD9982DA1:5000"
    }
   },
   "VpsFargateServiceLBPublicListenerF1C92789": {
@@ -448,7 +525,7 @@
    "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
    "Properties": {
     "HealthCheckIntervalSeconds": 45,
-    "HealthCheckPath": "/api/health",
+    "HealthCheckPath": "/health",
     "HealthCheckTimeoutSeconds": 30,
     "HealthyThresholdCount": 2,
     "Matcher": {
@@ -501,33 +578,13 @@
     "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/LB/PublicRedirectListener/Resource"
    }
   },
-  "VpsFargateServiceTaskDefTaskRole5E31DB9D": {
-   "Type": "AWS::IAM::Role",
-   "Properties": {
-    "AssumeRolePolicyDocument": {
-     "Statement": [
-      {
-       "Action": "sts:AssumeRole",
-       "Effect": "Allow",
-       "Principal": {
-        "Service": "ecs-tasks.amazonaws.com"
-       }
-      }
-     ],
-     "Version": "2012-10-17"
-    }
-   },
-   "Metadata": {
-    "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/TaskDef/TaskRole/Resource"
-   }
-  },
   "VpsFargateServiceTaskDefF824945B": {
    "Type": "AWS::ECS::TaskDefinition",
    "Properties": {
     "ContainerDefinitions": [
      {
       "Essential": true,
-      "Image": "tilersmyth/ecs-placeholder:latest",
+      "Image": "tilersmyth/ecs-placeholder-v2:latest",
       "LogConfiguration": {
        "LogDriver": "awslogs",
        "Options": {
@@ -541,8 +598,18 @@
       "Name": "staging",
       "PortMappings": [
        {
-        "ContainerPort": 3000,
+        "ContainerPort": 5000,
         "Protocol": "tcp"
+       }
+      ],
+      "Secrets": [
+       {
+        "Name": "DATABASE_URL",
+        "ValueFrom": "arn:aws:secretsmanager:us-east-1:781713655045:secret:vps/staging-UOgtUC:DATABASE_URL::"
+       },
+       {
+        "Name": "API_KEY",
+        "ValueFrom": "arn:aws:secretsmanager:us-east-1:781713655045:secret:vps/staging-UOgtUC:API_KEY::"
        }
       ]
      }
@@ -550,7 +617,7 @@
     "Cpu": "256",
     "ExecutionRoleArn": {
      "Fn::GetAtt": [
-      "VpsFargateServiceTaskDefExecutionRole7A58406D",
+      "EcsExecutionRoleFD93B7A2",
       "Arn"
      ]
     },
@@ -562,7 +629,7 @@
     ],
     "TaskRoleArn": {
      "Fn::GetAtt": [
-      "VpsFargateServiceTaskDefTaskRole5E31DB9D",
+      "EcsExecutionRoleFD93B7A2",
       "Arn"
      ]
     }
@@ -577,72 +644,6 @@
    "DeletionPolicy": "Retain",
    "Metadata": {
     "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/TaskDef/staging/LogGroup/Resource"
-   }
-  },
-  "VpsFargateServiceTaskDefExecutionRole7A58406D": {
-   "Type": "AWS::IAM::Role",
-   "Properties": {
-    "AssumeRolePolicyDocument": {
-     "Statement": [
-      {
-       "Action": "sts:AssumeRole",
-       "Effect": "Allow",
-       "Principal": {
-        "Service": "ecs-tasks.amazonaws.com"
-       }
-      }
-     ],
-     "Version": "2012-10-17"
-    },
-    "ManagedPolicyArns": [
-     {
-      "Fn::Join": [
-       "",
-       [
-        "arn:",
-        {
-         "Ref": "AWS::Partition"
-        },
-        ":iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
-       ]
-      ]
-     }
-    ]
-   },
-   "Metadata": {
-    "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/Resource"
-   }
-  },
-  "VpsFargateServiceTaskDefExecutionRoleDefaultPolicy9957144C": {
-   "Type": "AWS::IAM::Policy",
-   "Properties": {
-    "PolicyDocument": {
-     "Statement": [
-      {
-       "Action": [
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-       ],
-       "Effect": "Allow",
-       "Resource": {
-        "Fn::GetAtt": [
-         "VpsFargateServiceTaskDefstagingLogGroup9489A9E9",
-         "Arn"
-        ]
-       }
-      }
-     ],
-     "Version": "2012-10-17"
-    },
-    "PolicyName": "VpsFargateServiceTaskDefExecutionRoleDefaultPolicy9957144C",
-    "Roles": [
-     {
-      "Ref": "VpsFargateServiceTaskDefExecutionRole7A58406D"
-     }
-    ]
-   },
-   "Metadata": {
-    "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/TaskDef/ExecutionRole/DefaultPolicy/Resource"
    }
   },
   "VpsFargateService62188E5E": {
@@ -666,7 +667,7 @@
     "LoadBalancers": [
      {
       "ContainerName": "staging",
-      "ContainerPort": 3000,
+      "ContainerPort": 5000,
       "TargetGroupArn": {
        "Ref": "VpsFargateServiceLBPublicListenerECSGroup4CDFD554"
       }
@@ -674,7 +675,7 @@
     ],
     "NetworkConfiguration": {
      "AwsvpcConfiguration": {
-      "AssignPublicIp": "ENABLED",
+      "AssignPublicIp": "DISABLED",
       "SecurityGroups": [
        {
         "Fn::GetAtt": [
@@ -684,8 +685,8 @@
        }
       ],
       "Subnets": [
-       "subnet-0e4d0bb376f31544e",
-       "subnet-0b42154679db19569"
+       "subnet-07a5c088159da224c",
+       "subnet-0001c138396acd106"
       ]
      }
     },
@@ -694,9 +695,10 @@
     }
    },
    "DependsOn": [
+    "EcsExecutionRoleDefaultPolicy9114F99B",
+    "EcsExecutionRoleFD93B7A2",
     "VpsFargateServiceLBPublicListenerECSGroup4CDFD554",
-    "VpsFargateServiceLBPublicListenerF1C92789",
-    "VpsFargateServiceTaskDefTaskRole5E31DB9D"
+    "VpsFargateServiceLBPublicListenerF1C92789"
    ],
    "Metadata": {
     "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/Service/Service"
@@ -716,17 +718,18 @@
     "VpcId": "vpc-0c1fd07003dc37722"
    },
    "DependsOn": [
-    "VpsFargateServiceTaskDefTaskRole5E31DB9D"
+    "EcsExecutionRoleDefaultPolicy9114F99B",
+    "EcsExecutionRoleFD93B7A2"
    ],
    "Metadata": {
     "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/Resource"
    }
   },
-  "VpsFargateServiceSecurityGroupfromVpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918300043414145": {
+  "VpsFargateServiceSecurityGroupfromVpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A3591850002265A7F8": {
    "Type": "AWS::EC2::SecurityGroupIngress",
    "Properties": {
     "Description": "Load balancer to target",
-    "FromPort": 3000,
+    "FromPort": 5000,
     "GroupId": {
      "Fn::GetAtt": [
       "VpsFargateServiceSecurityGroupA510111C",
@@ -740,13 +743,14 @@
       "GroupId"
      ]
     },
-    "ToPort": 3000
+    "ToPort": 5000
    },
    "DependsOn": [
-    "VpsFargateServiceTaskDefTaskRole5E31DB9D"
+    "EcsExecutionRoleDefaultPolicy9114F99B",
+    "EcsExecutionRoleFD93B7A2"
    ],
    "Metadata": {
-    "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:3000"
+    "aws:cdk:path": "VpsEcsStackStaging/VpsFargateService/Service/SecurityGroup/from VpsEcsStackStagingVpsFargateServiceLBSecurityGroup37A35918:5000"
    }
   },
   "EcsDefaultClusterMnL3mNNYNVpsVpcB12FBA50": {
